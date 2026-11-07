@@ -65,8 +65,15 @@ cd ~/RobotSlam
 Automatically detect and install dependencies declared in package.xml:
 
 ```bash
+sudo apt update
+
+sudo apt install python3-rosdep -y
+
+sudo rosdep init
 rosdep update
 
+cd ~/RobotSlam
+rosdep install --from-paths src --ignore-src -r -y
 rosdep install \
   --from-paths src \
   --ignore-src \
