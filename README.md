@@ -105,7 +105,7 @@ echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
 
 echo "source ~/RobotSlam/install/setup.bash" >> ~/.bashrc
 ```
-
+You can run `source ~/RobotSlam/setup_env.sh`
 Apply changes:
 
 ```bash
