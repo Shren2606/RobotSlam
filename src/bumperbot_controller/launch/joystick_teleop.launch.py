@@ -112,10 +112,10 @@ def generate_launch_description():
     joy_node = Node(
 
         # ROS 2 package đọc joystick trên Linux
-        package="joy_linux",
+        package="joy",
 
         # Executable đọc dữ liệu joystick
-        executable="joy_linux_node",
+        executable="joy_node",
 
         # Đặt tên Node là joystick
         name="joystick",

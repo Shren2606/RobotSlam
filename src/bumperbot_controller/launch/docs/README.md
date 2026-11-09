@@ -6,7 +6,7 @@ Các sơ đồ được viết bằng [Mermaid](https://mermaid.js.org/) trong M
 
 ## 1. Cấu trúc tài liệu
 
-
+```text
 docs/
 ├── README.md
 │
@@ -17,7 +17,7 @@ docs/
 └── img/
     ├── ros2_joystick_flow.png
     └── ros2_control_flow.png
-
+```
 
 | Tài liệu | Nội dung |
 |---|---|
