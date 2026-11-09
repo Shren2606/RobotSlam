@@ -60,7 +60,7 @@ def generate_launch_description():
     # /joy
     #
     # Output:
-    # /cmd_vel hoặc topic được khai báo trong joy_teleop.yaml
+    # /bumperbot_controller/cmd_vel
     #
     # File cấu hình:
     # bumperbot_controller/config/joy_teleop.yaml
@@ -75,20 +75,16 @@ def generate_launch_description():
 
         # Truyền các parameters vào Node
         parameters=[
-
-            # Đọc file cấu hình joystick teleoperation
+            # Đọc cấu hình joystick teleoperation
             os.path.join(
-                get_package_share_directory(
-                    "bumperbot_controller"
-                ),
+                get_package_share_directory("bumperbot_controller"),
                 "config",
                 "joy_teleop.yaml"
             ),
 
-            # Truyền tham số sử dụng simulation time
+            # Sử dụng simulation time
             {
-                "use_sim_time":
-                    LaunchConfiguration("use_sim_time")
+                "use_sim_time": LaunchConfiguration("use_sim_time")
             }
         ]
     )
@@ -97,14 +93,14 @@ def generate_launch_description():
     # 3. JOY LINUX NODE
     # --------------------------------------------------------
 
-    # Node joy_linux:
-    # Đọc dữ liệu trực tiếp từ joystick được kết nối với Linux
+    # Node joy_node:
+    # Đọc dữ liệu trực tiếp từ joystick kết nối với Linux
     #
     # Input:
     # USB Joystick / Gamepad
     #
     # Output:
-    # Topic /joy
+    # /joy
     #
     # File cấu hình:
     # bumperbot_controller/config/joy_config.yaml
@@ -122,40 +118,68 @@ def generate_launch_description():
 
         # Truyền các parameters vào Node
         parameters=[
-
-            # Đọc file cấu hình joystick
+            # Đọc cấu hình joystick
             os.path.join(
-                get_package_share_directory(
-                    "bumperbot_controller"
-                ),
+                get_package_share_directory("bumperbot_controller"),
                 "config",
                 "joy_config.yaml"
             ),
 
             # Sử dụng simulation time
             {
-                "use_sim_time":
-                    LaunchConfiguration("use_sim_time")
+                "use_sim_time": LaunchConfiguration("use_sim_time")
             }
         ]
     )
 
     # --------------------------------------------------------
-    # 4. RETURN LAUNCH DESCRIPTION
+    # 4. TELEOP KEYBOARD NODE
     # --------------------------------------------------------
 
-    # Trả về danh sách các action cần chạy
-    return LaunchDescription(
-        [
-            # Khai báo tham số use_sim_time
-            use_sim_time_arg,
+    # Node teleop_keyboard:
+    # Chuyển đổi thao tác bàn phím thành lệnh vận tốc robot
+    #
+    # Input:
+    # Các phím điều khiển trên bàn phím
+    #
+    # Output:
+    # /bumperbot_controller/cmd_vel
+    #
+    # Message type:
+    # geometry_msgs/msg/TwistStamped
 
-            # Khởi chạy node chuyển joystick thành lệnh vận tốc
-            joy_teleop,
+    teleop_keyboard_node = Node(
+        package="teleop_twist_keyboard",
+        executable="teleop_twist_keyboard",
+        name="teleop_keyboard",
+        output="screen",
+        emulate_tty=True,
 
-            # Khởi chạy node đọc joystick từ thiết bị Linux
-            joy_node
-        ]
+        prefix="xterm -e",
+
+        remappings=[
+            ("cmd_vel", "/bumperbot_controller/cmd_vel"),
+        ],
+
+        parameters=[
+            {"stamped": True},
+        ],
     )
 
+    # --------------------------------------------------------
+    # 5. RETURN LAUNCH DESCRIPTION
+    # --------------------------------------------------------
 
+    # Trả về danh sách các action cần thực thi
+    return LaunchDescription([
+        use_sim_time_arg,
+
+        # Khởi chạy node chuyển joystick thành lệnh vận tốc
+        joy_teleop,
+
+        # Khởi chạy node đọc dữ liệu joystick
+        joy_node,
+
+        # Khởi chạy node điều khiển bằng bàn phím
+        teleop_keyboard_node,
+    ])
