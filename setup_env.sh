@@ -1,30 +1,121 @@
 #!/bin/bash
 
+set -e
+
+# ============================================================
+# RobotSlam Workspace Setup
+# ============================================================
+
+WORKSPACE="$HOME/RobotSlam"
 BASHRC="$HOME/.bashrc"
 
-# Check if ROS 2 Jazzy source already exists
+echo "=================================================="
+echo "          RobotSlam Setup & Build"
+echo "=================================================="
+
+# ============================================================
+# 1. Install System Dependencies
+# ============================================================
+
+echo ""
+echo "[1/5] Installing system dependencies..."
+
+sudo apt update
+
+sudo apt install -y \
+    xterm \
+    python3-rosdep \
+    python3-colcon-common-extensions
+
+echo "[INFO] System dependencies installed."
+
+# ============================================================
+# 2. Install ROS 2 Dependencies
+# ============================================================
+
+echo ""
+echo "[2/5] Installing ROS 2 dependencies..."
+
+source /opt/ros/jazzy/setup.bash
+
+if ! command -v rosdep &> /dev/null; then
+    echo "[ERROR] rosdep is not available."
+    exit 1
+fi
+
+# Initialize rosdep if necessary
+if [ ! -f /etc/ros/rosdep/sources.list.d/20-default.list ]; then
+    sudo rosdep init
+fi
+
+rosdep update
+
+cd "$WORKSPACE"
+
+rosdep install \
+    --from-paths src \
+    --ignore-src \
+    --rosdistro jazzy \
+    -r -y
+
+echo "[INFO] ROS 2 dependencies installed."
+
+# ============================================================
+# 3. Build RobotSlam Workspace
+# ============================================================
+
+echo ""
+echo "[3/5] Building RobotSlam..."
+
+colcon build --symlink-install
+
+echo "[INFO] RobotSlam build completed."
+
+# ============================================================
+# 4. Configure ROS 2 Environment
+# ============================================================
+
+echo ""
+echo "[4/5] Configuring ROS 2 environment..."
+
 if ! grep -Fq "source /opt/ros/jazzy/setup.bash" "$BASHRC"; then
 
     echo "" >> "$BASHRC"
     echo "# Load ROS 2 Jazzy" >> "$BASHRC"
-    echo "source /opt/ros/jazzy/setup.bash
-    " >> "$BASHRC"
-    
+    echo "source /opt/ros/jazzy/setup.bash" >> "$BASHRC"
 
 fi
 
-# Check if RobotSlam workspace source already exists
 if ! grep -Fq "source ~/RobotSlam/install/setup.bash" "$BASHRC"; then
 
+    echo "" >> "$BASHRC"
     echo "# Load RobotSlam workspace" >> "$BASHRC"
-    echo "source ~/RobotSlam/install/setup.bash
-    " >> "$BASHRC"
+    echo "source ~/RobotSlam/install/setup.bash" >> "$BASHRC"
 
 fi
 
-echo "ROS 2 environment setup completed!:
-# Load ROS 2 Jazzy
-source /opt/ros/jazzy/setup.bash
+# ============================================================
+# 5. Finalize Environment
+# ============================================================
 
-# Load RobotSlam workspace
-source ~/RobotSlam/install/setup.bash"
+echo ""
+echo "[5/5] Loading environment..."
+
+source "$BASHRC"
+
+echo ""
+echo "=================================================="
+echo "       RobotSlam Setup Completed!"
+echo "=================================================="
+
+echo "[OK] XTerm installed"
+echo "[OK] ROS 2 dependencies installed"
+echo "[OK] RobotSlam workspace built"
+echo "[OK] ROS 2 Jazzy configured"
+echo "[OK] RobotSlam workspace configured"
+
+echo ""
+echo "You can now run:"
+echo "  ros2 launch bumperbot_bringup simulated_robot.launch.py"
+echo ""
+echo "=================================================="
