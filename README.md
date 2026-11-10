@@ -105,11 +105,16 @@ echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
 
 echo "source ~/RobotSlam/install/setup.bash" >> ~/.bashrc
 ```
-You can run `source ~/RobotSlam/setup_env.sh`
+
 Apply changes:
 
 ```bash
 source ~/.bashrc
+```
+
+You can run for automation install: 
+```bash 
+source ~/RobotSlam/setup_env.sh
 ```
 
 ## 8. Run ROS 2 Launch Files
