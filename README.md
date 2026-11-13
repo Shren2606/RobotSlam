@@ -117,7 +117,70 @@ You can run for automation install:
 source ~/RobotSlam/setup_env.sh
 ```
 
-## 8. Run ROS 2 Launch Files
+
+## 8. Connect PS3 Controller to WSL2
+
+### 8.1. Check PS3 Controller on Windows
+
+Open PowerShell as Administrator:
+
+```powershell
+usbipd list
+```
+
+Look for the PS3 controller with VID:PID `054c:0268`.
+
+Example output:
+
+```text
+C:\Windows\System32> usbipd list
+
+Connected:
+BUSID  VID:PID    DEVICE                                      STATE
+5-4    054c:0268  USB Input Device                            Shared
+6-1    0d8c:033b  USB Input Device, MACHENIKE GX30PRO         Shared
+```
+
+### 8.2. Attach USB Device to WSL2
+
+Replace `BUSID` with the actual device BUSID.
+
+```powershell
+usbipd bind --busid BUSID
+usbipd attach --wsl --busid BUSID
+```
+
+### 8.3. Check Device on Ubuntu WSL2
+
+Check whether the USB device is recognized:
+
+```bash
+lsusb
+```
+
+Check available input devices:
+
+```bash
+ls /dev/input/
+```
+
+### 8.4. Install Joystick Testing Tool
+
+```bash
+sudo apt update
+sudo apt install joystick
+```
+
+### 8.5. Test PS3 Controller
+
+```bash
+jstest /dev/input/js0
+```
+
+Move the analog sticks and press controller buttons to verify that input values change.
+
+
+## 9. Run ROS 2 Launch Files
 
 General syntax:
 
@@ -139,7 +202,7 @@ ros2 launch bumperbot_bringup bringup.launch.py
 
 Replace the package name and launch filename with the actual launch file available in the repository.
 
-## 9. Useful ROS 2 Commands
+## 10. Useful ROS 2 Commands
 
 | Command | Description |
 |---|---|
@@ -153,7 +216,7 @@ Replace the package name and launch filename with the actual launch file availab
 | `colcon build` | Build workspace |
 | `colcon build --symlink-install` | Build using symlink installation |
 
-## 10. Clean and Rebuild
+## 11. Clean and Rebuild
 
 If build errors occur, clean generated directories:
 
@@ -165,7 +228,7 @@ rm -rf build install log
 colcon build
 ```
 
-## 11. Project Structure
+## 12. Project Structure
 
 ```text
 RobotSlam/
