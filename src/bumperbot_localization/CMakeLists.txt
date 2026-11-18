@@ -43,7 +43,7 @@ install(
 install(PROGRAMS
   ${PROJECT_NAME}/kalman_filter.py
   ${PROJECT_NAME}/imu_republisher.py
-  ${PROJECT_NAME}/odometr_motion_model.py
+  ${PROJECT_NAME}/odometry_motion_model.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
