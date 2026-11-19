@@ -252,3 +252,6 @@ RobotSlam/
 ## License
 
 See the repository for license information.
+
+## Download Ubuntu for Rasp 5
+https://cdimage.ubuntu.com/ubuntu/releases/24.04/release/
