@@ -151,20 +151,15 @@ def generate_launch_description():
     # geometry_msgs/msg/TwistStamped
 
     teleop_keyboard_node = Node(
-        package="teleop_twist_keyboard",
-        executable="teleop_twist_keyboard",
-        name="teleop_keyboard",
+        package="key_teleop",
+        executable="key_teleop",
+        name="key_teleop",
         output="screen",
         emulate_tty=True,
-
         prefix="xterm -e",
 
-        remappings=[
-            ("cmd_vel", "/bumperbot_controller/cmd_vel"),
-        ],
-
         parameters=[
-            {"stamped": True},
+            {"twist_stamped_enabled": False},
         ],
     )
 
@@ -176,10 +171,10 @@ def generate_launch_description():
         ),
         launch_arguments={
             "cmd_vel_out": "bumperbot_controller/cmd_vel_unstamped",
-            "config_topic": os.path.join(bumperbot_controller_pkg, "config", "twist_mux_topics.yaml"),
             "config_locks": os.path.join(bumperbot_controller_pkg, "config", "twist_mux_locks.yaml"),
+            "config_topics": os.path.join(bumperbot_controller_pkg, "config", "twist_mux_topics.yaml"),
             "config_joy": os.path.join(bumperbot_controller_pkg, "config", "twist_mux_joy.yaml"),
-            "use_sim_time": LaunchConfiguration("use_sim_time")
+            "use_sim_time": LaunchConfiguration("use_sim_time"),
         }.items()
     )
 
