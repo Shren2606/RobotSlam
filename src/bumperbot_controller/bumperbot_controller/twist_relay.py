@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist, TwistStamped
 
-class TwistRelay(Node):
+class TwistRelayNode(Node):
     def __init__(self):
         # Initialize the ROS 2 node
         super().__init__("twist_relay")
@@ -21,14 +21,14 @@ class TwistRelay(Node):
         )
 
         self.joy_sub = self.create_subscription(
-            Twist,
-            "/input_joy/cmd_vel_unstamped",
+            TwistStamped,
+            "/input_joy/cmd_vel_stamped",
             self.joy_twist_callback,
             10
         )
 
         self.joy_pub = self.create_publisher(
-            TwistStamped,
+            Twist,
             "/input_joy/cmd_vel",
             10
         )
@@ -40,7 +40,7 @@ class TwistRelay(Node):
         self.controler_pub.publish(twist_stamped)
 
     def joy_twist_callback(self, msg):
-        twist = Twist
+        twist = Twist()
         twist = msg.twist
         self.joy_pub.publish(twist)
 
@@ -49,8 +49,8 @@ def main():
     # Initialize ROS 2
     rclpy.init()
 
-    # Create TwistRelay node
-    node = TwistRelay()
+    # Create TwistRelayNode node
+    node = TwistRelayNode()
 
     # Keep the node running and process callbacks
     rclpy.spin(node)
