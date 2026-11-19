@@ -51,7 +51,7 @@
       </plugin>
       <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu">
       </plugin>
-      <plugin filename="ignition-gazebo-sensor-system" name="ignition::gazebo::systems::sensor">
+      <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
         <render_engine>ogre2</render_engine>
       </plugin>
     </xacro:if>
@@ -63,7 +63,7 @@
       </plugin>
       <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
       </plugin>
-      <plugin filename="ignition-gazebo-sensor-system" name="ignition::gazebo::systems::sensor">
+      <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
         <render_engine>ogre2</render_engine>
       </plugin>
     </xacro:unless>
@@ -71,7 +71,7 @@
 
   <!-- IMU -->
   <gazebo reference="imu_link">
-    <sensor name="imu" type="imu">
+    <sensors name="imu" type="imu">
         <always_on>true</always_on>
         <update_rate>100</update_rate>
         <gz_frame_id>imu_link</gz_frame_id>
@@ -118,7 +118,7 @@
             </z>
           </linear_acceleration>
         </imu>
-    </sensor>
+    </sensors>
   </gazebo>
 
   <gazebo reference="laser_link">
@@ -127,7 +127,7 @@
       <visualize>true</visualize>
       <topic>scan</topic>
       <update_rate>5</update_rate>
-      <gz_sim_id>laser_link</gz_sim_id>
+      <gz_frame_id>laser_link</gz_frame_id>
       <ray>
         <scan>
           <horizontal>
