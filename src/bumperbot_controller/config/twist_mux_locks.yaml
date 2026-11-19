@@ -1,5 +1,5 @@
 twist_mux:
-  ros_parameter:
+  ros__parameters:
     locks:
       safety_stop:
         topic: safety_stop
