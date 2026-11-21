@@ -163,28 +163,46 @@ def generate_launch_description():
         ],
     )
 
-    twist_mux_launch= IncludeLaunchDescription(
+
+    # Launch the twist_mux node with the robot's configuration files
+    twist_mux_launch = IncludeLaunchDescription(
         os.path.join(
             get_package_share_directory("twist_mux"),
             "launch",
             "twist_mux_launch.py"
         ),
         launch_arguments={
+            # Set the output topic for the selected velocity commands
             "cmd_vel_out": "bumperbot_controller/cmd_vel_unstamped",
+
+            # Load the safety lock configuration
             "config_locks": os.path.join(bumperbot_controller_pkg, "config", "twist_mux_locks.yaml"),
+
+            # Load the velocity input topics and their priorities
             "config_topics": os.path.join(bumperbot_controller_pkg, "config", "twist_mux_topics.yaml"),
+
+            # Load the joystick-related configuration
             "config_joy": os.path.join(bumperbot_controller_pkg, "config", "twist_mux_joy.yaml"),
+
+            # Use simulation time when running in simulation mode
             "use_sim_time": LaunchConfiguration("use_sim_time"),
         }.items()
     )
 
+    # Launch the Twist Relay node to convert velocity message types
     twist_relay_node = Node(
         package="bumperbot_controller",
         executable="twist_relay.py",
         name="twist_relay",
         output="screen",
-        parameters= [{"use_sim_time": LaunchConfiguration("use_sim_time")}]
+        parameters=[
+            {
+                # Synchronize the node's clock with the simulation time setting
+                "use_sim_time": LaunchConfiguration("use_sim_time")
+            }
+        ]
     )
+
 
     # --------------------------------------------------------
     # 5. RETURN LAUNCH DESCRIPTION
